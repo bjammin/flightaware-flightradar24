@@ -1,11 +1,17 @@
 # flightaware-flightradar24
 Unraid template for https://github.com/Thom-x/docker-fr24feed-piaware-dump1090
 
+There was a previous community applications template, however this did not seem to work anymore.
+
+Simply go through these steps to setup your feed with FlightAware and FlightRadar24.  If you already have these keys, you can skip these steps.
+
+Then "Create and run container"
+
 ## FlightAware
 
 Register on https://flightaware.com/account/join/.
 
-Run :
+At the unRaid console, run :
 
 ```
 docker run -it --rm \
@@ -19,20 +25,12 @@ docker run -it --rm \
 When the container starts you should see the feeder id, note it. Wait 5 minutes and you should see a new receiver at https://fr.flightaware.com/adsb/piaware/claim (use the same IP as your docker host), claim it and exit the container.
 If not, just open https://fr.flightaware.com/adsb/piaware/claim/ `your-feeder-id`
 
-Add the environment variable `PIAWARE_FEEDER_DASH_ID` with your feeder id.
+Note down the feeder ID, we will use it in the template variable `PIAWARE_FEEDER_DASH_ID`.
 
-| Environment Variable         | Configuration property | Default value |
-| ---------------------------- | ---------------------- | ------------- |
-| `PIAWARE_FEEDER_DASH_ID`     | `feeder-id (required)` | empty         |
-| `PIAWARE_RECEIVER_DASH_TYPE` | `receiver-type`        | `other`       |
-| `PIAWARE_RECEIVER_DASH_HOST` | `receiver-host`        | `127.0.0.1`   |
-| `PIAWARE_RECEIVER_DASH_PORT` | `receiver-port`        | `30005`       |
-
-Ex : `-e 'PIAWARE_RECEIVER_DASH_TYPE=other'`
 
 ## FlightRadar24
 
-Run :
+At the unRaid console, run :
 
 ```
 docker run -it --rm \
@@ -45,21 +43,12 @@ docker run -it --rm \
 
 Then : `/fr24feed/fr24feed/fr24feed --signup` and follow the instructions. For technical steps, your answer doesn't matter. We just need the sharing key at the end.
 
-Finally, to see the sharing, key run `cat /etc/fr24feed.ini`. You can now exit the container.
+Note down the feed key, we will use it in the template variable `FR24FEED_FR24KEY`.
 
-Add the environment variable `FR24FEED_FR24KEY` with your sharing key.
+## Create and run container
 
-| Environment Variable                  | Configuration property                                                                                              | Default value     |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------------- |
-| `FR24FEED_RECEIVER`                   | `receiver`                                                                                                          | `beast-tcp`       |
-| `FR24FEED_FR24KEY`                    | `fr24key (required)`                                                                                                | empty             |
-| `FR24FEED_HOST`                       | `host`                                                                                                              | `127.0.0.1:30005` |
-| `FR24FEED_BS`                         | `bs`                                                                                                                | `no`              |
-| `FR24FEED_RAW`                        | `raw`                                                                                                               | `no`              |
-| `FR24FEED_LOGMODE`                    | `logmode`                                                                                                           | `1`               |
-| `FR24FEED_LOGPATH`                    | `logpath`                                                                                                           | `/tmp`            |
-| `FR24FEED_MLAT`                       | `mlat`                                                                                                              | `no`              |
-| `FR24FEED_MLAT_DASH_WITHOUT_DASH_GPS` | `mlat-without-gps`                                                                                                  | `no`              |
-| `SYSTEM_FR24FEED_ULIMIT_N`            | Enforce ulimit like docker <=22 to prevent CPU issues (-1 means not enforced), recommended value when crash 1048576 | -1                |
+Start the container using PIAWARE_FEEDER_DASH_ID and FR24FEED_FR24KEY obtained above.
 
-Ex : `-e 'FR24FEED_FR24KEY=0123456789'`
+Also populate HTML_SITE_LAT with your latitude, HTML_SITE_LON with your longitude, and HTML_SITE_ALT with your altitude (in feet).
+
+Launch the container, and browse to yourIP:8080 and you should see the map!
