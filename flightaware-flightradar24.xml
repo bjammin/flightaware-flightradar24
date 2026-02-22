@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<Container version="2">
+	<Name>flightaware-flightradar24</Name>
+	<Repository>thomx/fr24feed-piaware</Repository>
+	<Registry>https://hub.docker.com/r/thomx/fr24feed-piaware</Registry>
+	<Privileged>false</Privileged>
+    <Network>bridge</Network>
+    <MyIP/>	
+    <Support>https://forums.unraid.net/topic/79394-support-foxxmd-fr24feed-piaware/</Support>
+    <Project>https://github.com/Thom-x/docker-fr24feed-piaware-dump1090-mutability</Project>
+	<Overview>Docker image of Fr24feed, FlightAware and dump1090.  Feed FlightRadar24 and FlightAware, allow you to see the positions of aircrafts on a map.</Overview>
+    <Description>All-in-one image for feeding FlightRadar24/FlightAware ADS-B/MLAT data with an RTL-SDR device and local web server for displaying aircraft positions on a map.[br][br]&#xD;
+        Docker contains: [br]&#xD;
+        &#160;* Piaware (Flightaware ADS-B and MLAT ground station software/feed)[br]&#xD;
+        &#160;* fr24feed (FlightRadar24 ADS-B software feed)[br]&#xD;
+        &#160;* Dump1090 for receiving and parsing data to the above software[br]&#xD;
+        &#160;* Simple HTTP Server to display received data (aircraft positions/track) on a real-time map[br][br]&#xD;
+        [b]Installation[/b][br][br]&#xD;
+        Follow the directions on the github README (Project Page link on unraid) with the provided Config entries in this template. See the support thread for more info.[br][br]&#xD;
+        [b]Usage[/b][br][br]&#xD;
+        If the container starts without error you can verify RTL-SDR is in use and feeds are working by checking the container log. Use the WebUI button to see the map.</Description>
+	<Category>Network:Other</Category>
+	<WebUI>http://[IP]:8080/</WebUI>
+	<Icon>https://raw.githubusercontent.com/bjammin/flightaware-flightradar24/main/images/flightaware-flightradar24-icon.png</Icon>
+	
+	<Networking>
+		<Mode>bridge</Mode>
+		<Publish>
+			<Port>
+				<HostPort></HostPort>
+				<ContainerPort>8080</ContainerPort>
+				<Protocol>tcp</Protocol>
+			</Port>
+			<Port>
+				<HostPort>8754</HostPort>
+				<ContainerPort>8754</ContainerPort>
+				<Protocol>tcp</Protocol>
+			</Port>
+		</Publish>
+	</Networking>
+
+	<!-- Volume -->
+	<Config Name="Localtime" Target="/etc/localtime" Default="/etc/localtime" Mode="ro" Description="Sync time for MLAT" Type="Path" Display="always" Required="true" Mask="false"/>
+
+	<!-- Device -->
+	<Config Name="RTL-SDR Device" Mode="rw" Description="Container Device: RTL-SDR" Type="Device" Display="always" Required="true" Mask="false"/>
+
+	<!-- Environment variables -->
+	<Config Name="FR24FEED_FR24KEY" Target="FR24FEED_FR24KEY" Mode="" Description="Flightradar24 key" Type="Variable" Display="always" Required="true" Mask="false"/>
+	<Config Name="PIAWARE_FEEDER_DASH_ID" Target="PIAWARE_FEEDER_DASH_ID" Mode="" Description="PiAware feeder dash ID" Type="Variable" Display="always" Required="true" Mask="false"/>
+	<Config Name="HTML_SITE_LAT" Target="HTML_SITE_LAT" Mode="" Description="Site latitude" Type="Variable" Display="always" Required="true" Mask="false"/>
+	<Config Name="HTML_SITE_LON" Target="HTML_SITE_LON" Mode="" Description="Site longitude" Type="Variable" Display="always" Required="true" Mask="false"/>
+	<Config Name="HTML_SITE_ALT" Target="HTML_SITE_ALT" Mode="" Description="Site altitude (m)" Type="Variable" Display="always" Required="true" Mask="false"/>
+
+</Container>
